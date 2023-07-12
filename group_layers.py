@@ -1,28 +1,4 @@
-import sys
-import time
-import arcpy
-
-# Script start time
-T0_SCRIPT = time.perf_counter()
-
-# Set ArcGIS Pro Project
-aprx = arcpy.mp.ArcGISProject("C:/ArcGIS/WaSHI_Roadmap/WaSHI_Roadmap.aprx")
-
-# Set gdb path and workspace
-PROJECT = "c:/ArcGIS/WaSHI_Roadmap/WaSHI_Roadmap.gdb/"
-arcpy.env.workspace = PROJECT
-
-# Set overwrite to True
-arcpy.env.overwriteOutput = True
-
-# Check if project is read only
-if aprx.isReadOnly:
-    print("Project is read only.")
-    # Exit if read only
-    sys.exit()
-
-# Create map variable
-mapx = aprx.listMaps("WaSHI_Roadmap")[0]
+from setup_project import (aprx, mapx)
 
 # Group layers by focus group
 
@@ -52,7 +28,3 @@ aprx.save()
 
 # Remove lock file
 del aprx
-
-# Script end time
-T1_SCRIPT = time.perf_counter()
-print(f"Script finished in {round((T1_SCRIPT-T0_SCRIPT)/60, 2)} minutes.")

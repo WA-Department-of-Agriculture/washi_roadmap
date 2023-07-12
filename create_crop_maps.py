@@ -10,9 +10,9 @@ if aprx.isReadOnly:
     # Exit if read only
     sys.exit()
 
-# Set workspace and gdb path
-arcpy.env.workspace = "c:/ArcGIS/WaSHI_Roadmap/WaSHI_Roadmap.gdb"
-GDB = "c:/ArcGIS/WaSHI_Roadmap/WaSHI_Roadmap.gdb/"
+# Set gdb path and workspace
+PROJECT = "c:/ArcGIS/WaSHI_Roadmap/WaSHI_Roadmap.gdb/"
+arcpy.env.workspace = PROJECT
 
 # Set overwrite to True
 arcpy.env.overwriteOutput = True
@@ -42,7 +42,7 @@ def create_crop_map(name, sql):
                           sql
                           )
     # Add fc to map
-    mapx.addDataFromPath(GDB + name)
+    mapx.addDataFromPath(PROJECT + name)
     # Save project
     aprx.save()
     # Print a success message

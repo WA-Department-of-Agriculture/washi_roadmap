@@ -29,12 +29,13 @@ sddraft = arcpy.sharing.CreateSharingDraft(
 sddraft.targetServer = CREDS_PATH
 sddraft.overwriteExistingService = True
 sddraft.credits = """
-    WSDA Agricultural Land Use Mapping Program (2022); USDA NRCS gSSURGO Washington Database (2022)
+    WSDA Agricultural Land Use Mapping Program (2022); 
+    USDA NRCS gSSURGO Washington Database (2022)
     """
 sddraft.summary = """
     Geospatial data layers for the Washington Soil Health Roadmap
     (https://soilhealth.wsu.edu/washington-state-soil-health-roadmap/)
-        """
+    """
 sddraft.tags = 'NRAS, WSDA, soils, crops, agriculture'
 sddraft.serverFolder = 'NRAS'
 

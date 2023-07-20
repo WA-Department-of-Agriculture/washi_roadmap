@@ -32,7 +32,6 @@ for key, value in group_dict.items():
     mapx = aprx.listMaps(key)[0]
     for url in value:
         mapx.addDataFromPath(url)
-
     aprx.save()
 
 # Turn off soils layers by default
@@ -56,6 +55,7 @@ for mapx in aprx.listMaps():
 # url to LTAREs map server
 LTARE_URL = NRAS_URL + 'WaSHI_LTAREs/MapServer/0'
 
+# Create dictionary of SQL definition queries
 ltare_dict = {
     'Western_Diversified': 
         '''Site_Name in ('WSU Puyallup', 'WSU Mount Vernon NWREC')''',
@@ -80,24 +80,14 @@ ltare_dict = {
         '''Site_Name in ('WSU Mount Vernon NWREC')''',
 }
 
+# Add LTAREs to each map with definition queries
 for key, value in ltare_dict.items():
     mapx = aprx.listMaps(key)[0]
     mapx.addDataFromPath(LTARE_URL)
     ltare = mapx.listLayers('LTAREs')[0]
     ltare.definitionQuery = value
     print(f'Added LTAREs to {key} map.')
-
     aprx.save()
-
-for mapx in aprx.listMaps():
-    if mapx.name not in ['WaSHI_Roadmap', 'LTAREs']:
-        mapx.addDataFromPath(LTARE_URL)
-        ltare = mapx.listLayers('LTAREs')[0]
-        ltare.definitionQuery = 'Site_Name = "WSU Puyallup"'
-
-for mapx in aprx.listMaps():
-    if mapx.name not in ['WaSHI_Roadmap', 'LTAREs']:
-        mapx.removeLayer(mapx.listLayers('LTAREs')[0])
 
 aprx.save()
 del aprx

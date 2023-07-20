@@ -1,0 +1,115 @@
+from setup_project import NRAS_URL, aprx
+
+# url to roadmap map server
+ROADMAP_URL = NRAS_URL + 'WaSHI_Roadmap_2023/MapServer/'
+
+# Create dictionary with focus groups and
+# indices to be concatenated with the roadmap url
+group_dict = {
+    'Western_Diversified': list(range(36, 40)),
+    'Tree_Fruit': list(range(31, 35)),
+    'Northwest_Annual': list(range(26, 30)),
+    'Grape': list(range(21, 25)),
+    'Dryland': list(range(16, 20)),
+    'CBIP': list(range(11, 15)),
+    'CBI': list(range(6, 10)),
+    'Caneberry': list(range(1, 5))
+}
+
+# Update dictionary to include urls instead of just the index
+for key, value in group_dict.items():
+    url_list = []
+    for index in value:
+        URL = ROADMAP_URL + str(index)
+        url_list.sort(reverse = True)
+        url_list.append(URL)
+        group_dict.update({key: url_list})
+
+# Create new maps for each focus group and add layers from map server
+for key, value in group_dict.items():
+    aprx.createMap(key)
+    print(f'Created {key} map.')
+    mapx = aprx.listMaps(key)[0]
+    for url in value:
+        mapx.addDataFromPath(url)
+
+    aprx.save()
+
+# Turn off soils layers by default
+for mapx in aprx.listMaps():
+    if mapx.name not in ['WaSHI_Roadmap', 'LTAREs']:
+        lyrs_to_remove = ['*Texture*', '*AWS*', '*SOC*']
+        for lyr in lyrs_to_remove:
+            l = mapx.listLayers(lyr)[0]
+            l.visible = False
+
+# Move crop layer above texture layer
+for mapx in aprx.listMaps():
+    if mapx.name not in ['WaSHI_Roadmap', 'LTAREs']:
+        crop = mapx.listLayers('*Crops*')[0]
+        texture = mapx.listLayers('*Texture*')[0]
+        mapx.moveLayer(reference_layer = texture,
+                       move_layer = crop,
+                       insert_position = 'BEFORE')
+
+# Add LTAREs layer
+# url to LTAREs map server
+LTARE_URL = NRAS_URL + 'WaSHI_LTAREs/MapServer/0'
+
+ltare_dict = {
+    'Western_Diversified': 
+        '''Site_Name in ('WSU Puyallup', 'WSU Mount Vernon NWREC')''',
+    'Tree_Fruit': 
+        '''Site_Name in ('WSU Wenatchee Sunrise Orchard', 'WSU Othello', 
+        'WSU Prosser')''',
+    'Northwest_Annual':
+        '''Site_Name in ('WSU Mount Vernon NWREC')''',
+    'Grape':
+        '''Site_Name in ('WSU Wenatchee Sunrise Orchard', 'WSU Othello', 
+        'WSU Prosser')''',
+    'Dryland':
+        '''Site_Name in ('WSU Wenatchee Sunrise Orchard', 'WSU Othello', 
+        'WSU Prosser', 'WSU Wilke')''',
+    'CBIP':
+        '''Site_Name in ('WSU Wenatchee Sunrise Orchard', 'WSU Othello', 
+        'WSU Prosser')''',
+    'CBI':
+        '''Site_Name in ('WSU Wenatchee Sunrise Orchard', 'WSU Othello', 
+        'WSU Prosser')''',
+    'Caneberry':
+        '''Site_Name in ('WSU Mount Vernon NWREC')''',
+}
+
+for key, value in ltare_dict.items():
+    mapx = aprx.listMaps(key)[0]
+    mapx.addDataFromPath(LTARE_URL)
+    ltare = mapx.listLayers('LTAREs')[0]
+    ltare.definitionQuery = value
+    print(f'Added LTAREs to {key} map.')
+
+    aprx.save()
+
+for mapx in aprx.listMaps():
+    if mapx.name not in ['WaSHI_Roadmap', 'LTAREs']:
+        mapx.addDataFromPath(LTARE_URL)
+        ltare = mapx.listLayers('LTAREs')[0]
+        ltare.definitionQuery = 'Site_Name = "WSU Puyallup"'
+
+for mapx in aprx.listMaps():
+    if mapx.name not in ['WaSHI_Roadmap', 'LTAREs']:
+        mapx.removeLayer(mapx.listLayers('LTAREs')[0])
+
+aprx.save()
+del aprx
+
+## Next steps using ArcGIS Pro:
+# Adjust attribute tables (field visibility, thousands places, aliases)
+    # Note for future: check if these changes are maintained when creating new
+    # FCs to avoid all this manual clicking...
+# Configure pop-ups (go to popup.html for code to copy and paste)
+# Add AVA to grape map
+# Zoom to appropriate extent
+
+# Share As Web Map
+    # Summary: Washington Soil Health Initiative Roadmap Focus Area: Red Raspberry
+    # Tags: washi,wsu,wsda,nras,soil health,agriculture, roadmap

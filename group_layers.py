@@ -1,4 +1,4 @@
-from setup_project import (aprx, mapx)
+from setup_project import aprx, mapx
 
 # Group layers by focus group
 
@@ -12,16 +12,26 @@ def group_lyrs(group_name):
                   layers to be moved into the newly created group layer.
     """
     mapx.createGroupLayer(group_name)
-    for lyrx in mapx.listLayers(group_name + "*"):
+    for lyrx in mapx.listLayers(group_name + "_*"):
         if lyrx.isFeatureLayer:
             mapx.addLayerToGroup(mapx.listLayers(group_name)[0], lyrx)
             mapx.removeLayer(lyrx)
 
-groups = ["CBI", "CBIP", "Dryland", "Grape", "Northwest_Annual",
-          "Caneberry", "Tree_Fruit", "Western_Diversified"]
+groups = [
+    'Western_Diversified',
+    'Tree_Fruit',
+    'Northwest_Annual',
+    'Grape',
+    'Dryland',
+    'CBIP',
+    'CBI',
+    'Caneberry'
+    ]
 
 for group in groups:
     group_lyrs(group)
+
+print("Grouped layers by focus group")
 
 # Save project
 aprx.save()

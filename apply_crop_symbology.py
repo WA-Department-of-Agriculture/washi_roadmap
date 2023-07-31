@@ -1,17 +1,15 @@
 import arcpy
-from setup_project import aprx
+from setup_project import aprx, LAYER_FOLDER
 
 # Import texture, AWS, and SOC symbology as group layer
 def apply_crop_symbology():
     ''' Apply symbology to crop layers.
     '''
-    layer_folder = 'C:/ArcGIS/WaSHI_Roadmap_2023/Layer_Files/'
-
     for lyr in mapx.listLayers('*Crops'):
         if mapx.name == 'WaSHI_Roadmap':
-            sym_lyr = layer_folder + lyr.name + '.lyrx'
+            sym_lyr = LAYER_FOLDER + lyr.name + '.lyrx'
         else:
-            sym_lyr = layer_folder + mapx.name + '_Crops.lyrx'
+            sym_lyr = LAYER_FOLDER + mapx.name + '_Crops.lyrx'
         if lyr.isFeatureLayer:
             arcpy.management.ApplySymbologyFromLayer(
             lyr,

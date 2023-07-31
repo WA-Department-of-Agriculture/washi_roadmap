@@ -6,6 +6,9 @@ SSURGO_GDB = 'C:/ArcGIS/gSSURGO_WA/gSSURGO_WA.gdb/'
 PROJECT_GDB = 'C:/ArcGIS/WaSHI_Roadmap_2023/WaSHI_Roadmap_2023.gdb/'
 SCRATCH_GDB = 'C:/ArcGIS/WaSHI_Roadmap_2023/scratch.gdb/'
 
+# Set layer folder path
+LAYER_FOLDER = 'C:/ArcGIS/WaSHI_Roadmap_2023/Layer_Files/'
+
 # NRAS REST Service URL
 NRAS_URL = 'https://fortress.wa.gov/agr/gis/wsdagis/rest/services/NRAS/'
 

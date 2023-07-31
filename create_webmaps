@@ -1,7 +1,7 @@
 import time
 import arcpy
 
-from setup_project import NRAS_URL, aprx
+from setup_project import NRAS_URL, LAYER_FOLDER, aprx
 from apply_crop_symbology import apply_crop_symbology
 from apply_soil_symbology import apply_soil_symbology
 
@@ -116,7 +116,7 @@ for key, value in ltare_dict.items():
     ltare.definitionQuery = value
     arcpy.management.ApplySymbologyFromLayer(
         in_layer = ltare,
-        in_symbology_layer = r"C:\ArcGIS\WaSHI_Roadmap\LTAREs.lyrx",
+        in_symbology_layer = LAYER_FOLDER + 'LTAREs.lyrx',
         symbology_fields = "VALUE_FIELD Site_Name Site_Name",
         update_symbology = "DEFAULT"
 )

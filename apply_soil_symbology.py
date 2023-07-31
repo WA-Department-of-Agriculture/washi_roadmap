@@ -1,14 +1,13 @@
 import arcpy
-from setup_project import aprx
+from setup_project import aprx, LAYER_FOLDER
 
 # Import texture, AWS, and SOC symbology as group layer
 def apply_soil_symbology():
     ''' Apply symbology for AWS, SOC, and texture layers.
     '''
-    layer_folder = 'C:/ArcGIS/WaSHI_Roadmap_2023/Layer_Files/'
-    aws_lyr = layer_folder + 'AWS.lyrx'
-    soc_lyr = layer_folder + 'SOC.lyrx'
-    texture_lyr = layer_folder + 'Texture.lyrx'
+    aws_lyr = LAYER_FOLDER + 'AWS.lyrx'
+    soc_lyr = LAYER_FOLDER + 'SOC.lyrx'
+    texture_lyr = LAYER_FOLDER + 'Texture.lyrx'
 
 # Apply texture symbology
     for lyr in mapx.listLayers('*Texture'):

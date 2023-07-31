@@ -1,0 +1,41 @@
+import arcpy
+
+# I can't figure out how to get around this error when working in VSCode:
+    # arcgisscripting.ExecuteError: ERROR 000464: Cannot get exclusive schema lock.
+    # Either being edited or in use by another application or service.
+    # Failed to execute (AlterField).
+
+# For some reason it works if I copy and paste this into ArcGIS Pro.
+# # Set ArcGIS Pro Project
+aprx = arcpy.mp.ArcGISProject('CURRENT')
+lyrs_to_not_edit = ['World Topographic Map', 'World Hillshade',
+                    'LTAREs', 'Established_AVAs']
+
+for mapx in aprx.listMaps():
+    for lyr in mapx.listLayers():
+        if lyr.name not in lyrs_to_not_edit and lyr.isFeatureLayer:
+            # Must make some change to field in order to populate CIM field descriptions:
+            # https://community.esri.com/t5/python-questions/cim-lyr-featuretable-fielddescriptions-returns-an/td-p/1046116/page/2
+            arcpy.management.AlterField(lyr,
+                                        "OBJECTID", 
+                                        new_field_alias = "OBJECTID")
+            cim_lyr = lyr.getDefinition('V2')
+
+            # Update field visibility
+            for field_desc in cim_lyr.featureTable.fieldDescriptions:
+                name = field_desc.fieldName
+                num_fmt = field_desc.numberFormat
+                if name in ['OBJECTID', 'ExactAcres']:
+                    field_desc.visible =  False
+            # Update number format
+                if name in ['Acres', 'aws0_30', 'soc0_30']:
+                    num_fmt.roundingValue = 1
+                    num_fmt.useSeparator = True
+            print(f'Updated {lyr} fields.')
+            lyr.setDefinition(cim_lyr)
+
+# Save the project
+aprx.save()
+
+# Remove file locks
+del aprx

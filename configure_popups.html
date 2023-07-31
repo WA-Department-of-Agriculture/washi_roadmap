@@ -1,0 +1,137 @@
+<!-- 
+Copy and paste this HTML code into ArcGIS Pro Configure Pop-ups 
+Remember to change Pop-up Field Formatting to turn thousands sep on 
+and reduce decimal places
+-->
+
+<!-- Crop Popup -->
+<!-- Title: {CropType} -->
+<table style='vertical-align: top;width: 100%;background-color: #F7F7F7;border: 1px solid black;border-collapse: collapse;font-family: Segoe UI, Tahoma, Verdana, Geneva, Arial, Helvetica, sans-serif;font-size: 9pt;'>
+  <tbody>
+    <tr valign='top' style='background-color: rgb(242, 240, 230);'>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);padding-right: 5px;color:rgb(74, 74, 74);'><strong>Crop Group</strong></td>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);color:rgb(0, 0, 0);'>{CropGroup}</td>
+    </tr>
+    <tr valign='top' style='background-color: rgb(255, 255, 255);'>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);padding-right: 5px;color:rgb(74, 74, 74);'><strong>Crop Type</strong></td>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);color:rgb(0, 0, 0);'>{CropType}</td>
+    </tr>
+    <tr valign='top' style='background-color: rgb(242, 240, 230);'>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);padding-right: 5px;color:rgb(74, 74, 74);'><strong>Crop Description</strong></td>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);color:rgb(0, 0, 0);'>{CropDescription}</td>
+    </tr>
+    <tr valign='top' style='background-color: rgb(255, 255, 255);'>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);padding-right: 5px;color:rgb(74, 74, 74);'><strong>Acres</strong></td>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);color:rgb(0, 0, 0);'>{Acres}</td>
+    </tr>
+    <tr valign='top' style='background-color: rgb(242, 240, 230);'>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);padding-right: 5px;color:rgb(74, 74, 74);'><strong>Irrigation</strong></td>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);color:rgb(0, 0, 0);'>{Irrigation}</td>
+    </tr>
+    <tr valign='top' style='background-color: rgb(255, 255, 255);'>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);padding-right: 5px;color:rgb(74, 74, 74);'><strong>Rotation Crop Type</strong></td>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);color:rgb(0, 0, 0);'>{RotationCrop}</td>
+    </tr>
+    <tr valign='top' style='background-color: rgb(242, 240, 230);'>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);padding-right: 5px;color:rgb(74, 74, 74);'><strong>Cover Crop</strong></td>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);color:rgb(0, 0, 0);'>{CoverCrop}</td>
+    </tr>
+    <tr valign='top' style='background-color: rgb(255, 255, 255);'>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);padding-right: 5px;color:rgb(74, 74, 74);'><strong>Initial Survey Date</strong></td>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);color:rgb(0, 0, 0);'>{InitialSurveyDate}</td>
+    </tr>
+    <tr valign='top' style='background-color: rgb(242, 240, 230);'>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);padding-right: 5px;color:rgb(74, 74, 74);'><strong>Last Survey Date</strong></td>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);color:rgb(0, 0, 0);'>{LastSurveyDate}</td>
+    </tr>
+    <tr valign='top' style='background-color: rgb(255, 255, 255);'>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);padding-right: 5px;color:rgb(74, 74, 74);'><strong>Data Source</strong></td>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);color:rgb(0, 0, 0);'>{DataSource}</td>
+    </tr>
+    <tr valign='top' style='background-color: rgb(242, 240, 230);'>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);padding-right: 5px;color:rgb(74, 74, 74);'><strong>Notes</strong></td>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);color:rgb(0, 0, 0);'>{Notes}</td>
+    </tr>
+    <tr valign='top' style='background-color: rgb(255, 255, 255);'>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);padding-right: 5px;color:rgb(74, 74, 74);'><strong>TRS</strong></td>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);color:rgb(0, 0, 0);'>{TRS}</td>
+    </tr>
+    <tr valign='top' style='background-color: rgb(242, 240, 230);'>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);padding-right: 5px;color:rgb(74, 74, 74);'><strong>County</strong></td>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);color:rgb(0, 0, 0);'>{County}</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Texture Popup -->
+<!-- Title: Texture: {texcl_or_lieu} ({gentex}) -->
+<table style='vertical-align: top;width: 100%;background-color: #F7F7F7;border: 1px solid black;border-collapse: collapse;font-family: Segoe UI, Tahoma, Verdana, Geneva, Arial, Helvetica, sans-serif;font-size: 9pt;'>
+  <tbody>
+    <tr valign='top' style='background-color: rgb(242, 240, 230);'>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);padding-right: 5px;color:rgb(74, 74, 74);'><strong>Texture or Surface Description</strong></td>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);color:rgb(0, 0, 0);'>{texcl_or_lieu}</td>
+    </tr>
+    <tr valign='top' style='background-color: rgb(255, 255, 255);'>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);padding-right: 5px;color:rgb(74, 74, 74);'><strong>Textural Group</strong></td>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);color:rgb(0, 0, 0);'>{gentex}</td>
+    </tr>
+    <tr valign='top' style='background-color: rgb(242, 240, 230);'>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);padding-right: 5px;color:rgb(74, 74, 74);'><strong>Acres</strong></td>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);color:rgb(0, 0, 0);'>{Acres}</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- SOC Popup -->
+<!-- Title: SOC: {soc0_30} g per 0 to 30 cm zone -->
+<!-- Display label: SOC (g per 0-30 cm zone) -->
+<strong>Soil Organic Carbon (SOC)</strong> 
+<br><br>
+<table style='vertical-align: top;width: 100%;background-color: #F7F7F7;border: 1px solid black;border-collapse: collapse;font-family: Segoe UI, Tahoma, Verdana, Geneva, Arial, Helvetica, sans-serif;font-size: 9pt;'>
+  <tbody>
+    <tr valign='top' style='background-color: rgb(242, 240, 230);'>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);padding-right: 1px;color:rgb(74, 74, 74);'><strong>SOC (g per 0-30 cm zone)</strong></td>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);color:rgb(0, 0, 0);'>{soc0_30}</td>
+    </tr>
+    <tr valign='top' style='background-color: rgb(255, 255, 255);'>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);padding-right: 1px;color:rgb(74, 74, 74);'><strong>Acres</strong></td>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);color:rgb(0, 0, 0);'>{Acres}</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- AWS Popup -->
+<!-- Title: AWS: {aws0_30} mL per 0 to 30 cm zone -->
+<!-- Display label: AWS (mL per 0-30 cm zone) -->
+<strong>Available Water Storage (AWS)</strong>
+<br><br>
+<table style='vertical-align: top;width: 100%;background-color: #F7F7F7;border: 1px solid black;border-collapse: collapse;font-family: Segoe UI, Tahoma, Verdana, Geneva, Arial, Helvetica, sans-serif;font-size: 9pt;'>
+  <tbody>
+    <tr valign='top' style='background-color: rgb(242, 240, 230);'>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);padding-right: 1px;color:rgb(74, 74, 74);'><strong>AWS (mL per 0-30 cm zone)</strong></td>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);color:rgb(0, 0, 0);'>{aws0_30}</td>
+    </tr>
+    <tr valign='top' style='background-color: rgb(255, 255, 255);'>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);padding-right: 1px;color:rgb(74, 74, 74);'><strong>Acres</strong></td>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);color:rgb(0, 0, 0);'>{Acres}</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- LTAREs -->
+<table style='vertical-align: top;width: 100%;background-color: #F7F7F7;border: 1px solid black;border-collapse: collapse;font-family: Segoe UI, Tahoma, Verdana, Geneva, Arial, Helvetica, sans-serif;font-size: 9pt;'>
+  <tbody>
+    <tr valign='top' style='background-color: rgb(242, 240, 230);'>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);padding-right: 5px;color:rgb(74, 74, 74);'><strong>Site Name</strong></td>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);color:rgb(0, 0, 0);'>{Site_Name}</td>
+    </tr>
+    <tr valign='top' style='background-color: rgb(255, 255, 255);'>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);padding-right: 5px;color:rgb(74, 74, 74);'><strong>Description</strong></td>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);color:rgb(0, 0, 0);'>{Description}</td>
+    </tr>
+    <tr valign='top' style='background-color: rgb(242, 240, 230);'>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);padding-right: 5px;color:rgb(74, 74, 74);'><strong>Year Established</strong></td>
+      <td style='padding: 2px;padding-bottom: 5px;border: 1px solid rgb(204, 194, 156);color:rgb(0, 0, 0);'>{Year_Established}</td>
+    </tr>
+  </tbody>
+</table>

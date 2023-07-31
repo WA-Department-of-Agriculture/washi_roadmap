@@ -16,6 +16,8 @@ def group_lyrs(group_name):
         if lyrx.isFeatureLayer:
             mapx.addLayerToGroup(mapx.listLayers(group_name)[0], lyrx)
             mapx.removeLayer(lyrx)
+            # Open map view
+            mapx.openView()
 
 groups = [
     'Western_Diversified',
@@ -38,3 +40,5 @@ aprx.save()
 
 # Remove lock file
 del aprx
+
+print('Open project and check everything, then run publish_map_service.py.')

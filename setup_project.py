@@ -3,10 +3,10 @@ import arcpy
 
 # Set gdb paths
 SSURGO_GDB = 'C:/ArcGIS/gSSURGO_WA/gSSURGO_WA.gdb/'
-PROJECT_GDB = 'C:/ArcGIS/WaSHI_Roadmap/WaSHI_Roadmap.gdb/'
-SCRATCH_GDB = 'C:/ArcGIS/WaSHI_Roadmap/scratch.gdb/'
+PROJECT_GDB = 'C:/ArcGIS/WaSHI_Roadmap_2023/WaSHI_Roadmap_2023.gdb/'
+SCRATCH_GDB = 'C:/ArcGIS/WaSHI_Roadmap_2023/scratch.gdb/'
 
-# NRAS REST Services
+# NRAS REST Service URL
 NRAS_URL = 'https://fortress.wa.gov/agr/gis/wsdagis/rest/services/NRAS/'
 
 def set_env(gdb: str, overwrite: bool):
@@ -22,7 +22,7 @@ def set_env(gdb: str, overwrite: bool):
 set_env(PROJECT_GDB, True)
 
 # Set ArcGIS Pro Project
-aprx = arcpy.mp.ArcGISProject('C:/ArcGIS/WaSHI_Roadmap/WaSHI_Roadmap.aprx')
+aprx = arcpy.mp.ArcGISProject('C:/ArcGIS/WaSHI_Roadmap_2023/WaSHI_Roadmap_2023.aprx')
 
 # Check if project is read only
 if aprx.isReadOnly:
@@ -34,7 +34,7 @@ if aprx.isReadOnly:
 if arcpy.Exists(SCRATCH_GDB) is True:
     print('scratch.gdb already exists.')
 else:
-    arcpy.management.CreateFileGDB('C:/ArcGIS/WaSHI_Roadmap/',
+    arcpy.management.CreateFileGDB('C:/ArcGIS/WaSHI_Roadmap_2023/',
                                    'scratch.gdb')
     print('Created scratch.gdb.')
 
@@ -46,7 +46,5 @@ if len(roadmap) == 1:
     print('WaSHI_Roadmap already exists.')
 elif len(roadmap) == 0:
     aprx.createMap('WaSHI_Roadmap', 'Map')
-    mapx = roadmap[0]
+    mapx = aprx.listMaps('WaSHI_Roadmap')[0]
     print('Created WaSHI_Roadmap.')
-elif len(roadmap) > 1:
-    print("More than one map called 'WaSHI_Roadmap' in project.")

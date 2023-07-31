@@ -1,4 +1,12 @@
+import time
+import arcpy
+
 from setup_project import NRAS_URL, aprx
+from apply_crop_symbology import apply_crop_symbology
+from apply_soil_symbology import apply_soil_symbology
+
+# Script start time
+T0_SCRIPT = time.perf_counter()
 
 # url to roadmap map server
 ROADMAP_URL = NRAS_URL + 'WaSHI_Roadmap_2023/MapServer/'
@@ -28,11 +36,16 @@ for key, value in group_dict.items():
 # Create new maps for each focus group and add layers from map server
 for key, value in group_dict.items():
     aprx.createMap(key)
-    print(f'Created {key} map.')
     mapx = aprx.listMaps(key)[0]
     for url in value:
         mapx.addDataFromPath(url)
-    aprx.save()
+    print(f'Created {key} map.')
+
+# Apply symbologies
+for mapx in aprx.listMaps():
+    apply_crop_symbology()
+    apply_soil_symbology()
+print('Applied crop and soil symbologies.')
 
 # Turn off soils layers by default
 for mapx in aprx.listMaps():
@@ -41,6 +54,7 @@ for mapx in aprx.listMaps():
         for lyr in lyrs_to_remove:
             l = mapx.listLayers(lyr)[0]
             l.visible = False
+print('Turned soil layers off by default.')
 
 # Move crop layer above texture layer
 for mapx in aprx.listMaps():
@@ -50,6 +64,20 @@ for mapx in aprx.listMaps():
         mapx.moveLayer(reference_layer = texture,
                        move_layer = crop,
                        insert_position = 'BEFORE')
+print('Moved crop layer above soils layers.')
+
+# Remove focus group name from layer names
+for mapx in aprx.listMaps():
+    if mapx.name not in ['WaSHI_Roadmap', 'LTAREs']:
+        for lyr in mapx.listLayers('*Crops'):
+            lyr.name = 'Crops'
+        for lyr in mapx.listLayers('*AWS*'):
+            lyr.name = 'AWS'
+        for lyr in mapx.listLayers('*SOC*'):
+            lyr.name = 'SOC'
+        for lyr in mapx.listLayers('*Texture*'):
+            lyr.name = 'Texture'
+print('Removed focus group name from layer names.')
 
 # Add LTAREs layer
 # url to LTAREs map server
@@ -86,18 +114,45 @@ for key, value in ltare_dict.items():
     mapx.addDataFromPath(LTARE_URL)
     ltare = mapx.listLayers('LTAREs')[0]
     ltare.definitionQuery = value
-    print(f'Added LTAREs to {key} map.')
-    aprx.save()
+    arcpy.management.ApplySymbologyFromLayer(
+        in_layer = ltare,
+        in_symbology_layer = r"C:\ArcGIS\WaSHI_Roadmap\LTAREs.lyrx",
+        symbology_fields = "VALUE_FIELD Site_Name Site_Name",
+        update_symbology = "DEFAULT"
+)
+print('Added LTAREs to maps.')
 
+# Add AVA to grape map
+AVA = 'https://fortress.wa.gov/agr/gis/wsdagis/rest/services/NRAS/AVA_2022/MapServer/0'
+grape_map = aprx.listMaps('Grape')[0]
+grape_map.addDataFromPath(AVA)
+ava_lyr = grape_map.listLayers('*AVA*')[0]
+ava_lyr.definitionQuery = "Name <> 'Puget Sound'"
+ava_lyr.visible = False
+grape_map.moveLayer(grape_map.listLayers('*SOC*')[0], ava_lyr, 'AFTER')
+print('Added AVAs to grape map.')
+
+# Update basemap from deprecated version that
+# for some reason gets published to AGOL
+for mapx in aprx.listMaps():
+    mapx.addBasemap('Topographic')
+
+# Save the project
 aprx.save()
+
+# Remove file locks
 del aprx
 
+# Script end time
+T1_SCRIPT = time.perf_counter()
+print(f'Script finished in {round((T1_SCRIPT-T0_SCRIPT)/60, 2)} minutes.')
+
+# Not sure why symbology isn't applied to popups when run in this script,
+# but it does seem to run when called from the original scripts.
+print('Run apply_crop_symbology.py and apply_soils_symbology.py.')
+
 ## Next steps using ArcGIS Pro:
-# Adjust attribute tables (field visibility, thousands places, aliases)
-    # Note for future: check if these changes are maintained when creating new
-    # FCs to avoid all this manual clicking...
-# Configure pop-ups (go to popup.html for code to copy and paste)
-# Add AVA to grape map
+# Open each map, double check everything looks good
 # Zoom to appropriate extent
 
 # Share As Web Map

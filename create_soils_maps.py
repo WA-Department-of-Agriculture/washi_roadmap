@@ -1,9 +1,10 @@
 import csv
 import time
+
 import arcpy
-from setup_project import (SCRATCH_GDB, SSURGO_GDB, PROJECT_GDB,
-                           set_env,
-                           aprx, mapx)
+
+from setup_project import (PROJECT_GDB, SCRATCH_GDB, SSURGO_GDB,
+                           set_env, aprx, mapx)
 
 # Script start time
 T0_SCRIPT = time.perf_counter()
@@ -25,7 +26,7 @@ print(f'    in {round((T1-T0)/60, 2)} minutes.')
 # Start time
 T0 = time.perf_counter()
 
-# Project to NAD 1983 StatePlane Washington South FIPS 4602
+# Project to NAD 1983 HARN StatePlane Washington South FIPS 4602 (Meters)
 arcpy.management.Project(
     'mupolygon',
     'soils',
@@ -36,8 +37,8 @@ arcpy.management.Project(
 # End time
 T1 = time.perf_counter()
 
-print('Projected soils to NAD 1983 StatePlane Washington South FIPS 4602')
-print(f'    in {round((T1-T0)/60, 2)} minutes.')
+print('Projected soils to NAD 1983 HARN StatePlane Washington South')
+print(f'    FIPS 4602 (Meters) in {round((T1-T0)/60, 2)} minutes.')
 
 # Start time
 T0 = time.perf_counter()
@@ -128,6 +129,21 @@ def concat(*args):
 )
 print('Concatenated texcl and lieutex into new field: texcl_or_lieu.')
 
+# Replace blanks in texcl_or_lieu with 'No Data'
+arcpy.management.CalculateField(
+    in_table='soils',
+    field='texcl_or_lieu',
+    expression='replaceBlank(!texcl_or_lieu!)',
+    expression_type='PYTHON3',
+    code_block='''
+def replaceBlank(texcl_or_lieu):
+    if texcl_or_lieu == '':
+        return 'No Data'
+    else: return texcl_or_lieu''',
+    field_type='TEXT',
+)
+print("Replaced blanks in texcl_or_lieu with 'No Data'.")
+
 # Generalize texture for easier mapping based on USDA texture triangle
 # Create dictionary from texture.csv
 with open('C:/ArcGIS/WaSHI_Roadmap/texture.csv', 'r',
@@ -153,6 +169,20 @@ arcpy.management.CalculateField(
 )
 print('Created gentex field.')
 
+# Set field aliases
+field_dict = {
+    'texcl_or_lieu': 'Texture or Surface Description',
+    'gentex': 'Textural Group',
+    'aws0_30': 'AWS (mL per 0-30 cm)',
+    'soc0_30': 'SOC (g per 0-30 cm)'
+}
+
+for field in arcpy.ListFields('soils'):
+    if field.name in field_dict:
+        arcpy.management.AlterField('soils', field.name,
+                                    new_field_alias = field_dict[field.name])
+        print(f'Updated alias for {field.name}')
+
 # Export soils feature class to project gdb
 arcpy.conversion.FeatureClassToGeodatabase(
     Input_Features = 'soils',
@@ -160,131 +190,15 @@ arcpy.conversion.FeatureClassToGeodatabase(
 )
 print('Exported soils to WaSHI Roadmap project gdb.')
 
-# Switch workspace
-set_env(PROJECT_GDB, True)
+# Add new soils fc to map
+mapx.addDataFromPath(PROJECT_GDB + 'soils')
 
-# Calculate acres
-arcpy.management.CalculateGeometryAttributes(
-    in_features = 'soils',
-    geometry_property = 'Acres AREA',
-    area_unit = 'ACRES'
-)
-print('Calculated Acres in soils fc.')
-
-# End time
-T1 = time.perf_counter()
-print(f'Copied, joined, and exported soils in {round((T1-T0)/60, 2)} minutes.')
-
-# Start time
-T0 = time.perf_counter()
-
-# Clip soils to each focus area
-for lyr in mapx.listLayers('*_Crops'):
-    print(lyr.name)
-    name = lyr.name[:lyr.name.index('_Crops')] + '_Soils'
-    arcpy.analysis.Clip('soils', lyr, name)
-    # Add new clipped fc to map and save project
-    mapx.addDataFromPath(PROJECT_GDB + name)
-    aprx.save()
-    print(f'Clipped soils to {lyr.name}.')
-
-# End time
-T1 = time.perf_counter()
-print(f'Clipped all focus areas in {round((T1-T0)/60, 2)} minutes.')
-
-# Start time
-T0 = time.perf_counter()
-
-# Create new fc for AWS, SOC, and texture
-for lyr in mapx.listLayers('*_Soils'):
-    # AWS
-    name_aws = lyr.name[:lyr.name.index('_Soils')] + '_AWS_0_30cm'
-    arcpy.management.CopyFeatures(lyr, name_aws)
-    arcpy.management.DeleteField(name_aws, ['aws0_30', 'Acres'], 'KEEP_FIELDS')
-    # Add new fc to map and save project
-    mapx.addDataFromPath(PROJECT_GDB + name_aws)
-    print(f'Created new feature class {name_aws}.')
-
-    # SOC
-    name_soc = lyr.name[:lyr.name.index('_Soils')] + '_SOC_0_30cm'
-    arcpy.management.CopyFeatures(lyr, name_soc)
-    arcpy.management.DeleteField(name_soc, ['soc0_30', 'Acres'], 'KEEP_FIELDS')
-    # Add new fc to map and save project
-    mapx.addDataFromPath(PROJECT_GDB + name_soc)
-    print(f'Created new feature class {name_soc}.')
-
-    # Texture
-    name_texture = lyr.name[:lyr.name.index('_Soils')] + '_Texture'
-    arcpy.management.CopyFeatures(lyr, name_texture)
-    arcpy.management.DeleteField(name_texture,
-                                 ['texcl_or_lieu', 'gentex', 'Acres'],
-                                 'KEEP_FIELDS')
-    # Add new fc to map and save project
-    mapx.addDataFromPath(PROJECT_GDB + name_texture)
-    print(f'Created new feature class {name_texture}.')
-    aprx.save()
-
-# Remove layers that end in '_Soils'
-for lyr in mapx.listLayers('*_Soils'):
-    mapx.removeLayer(lyr)
-
-# End time
-T1 = time.perf_counter()
-print('Exported AWS, SOC, and Texture as new fcs')
-print(f'    in {round((T1-T0)/60, 2)} minutes.')
-
-# Start time
-T0 = time.perf_counter()
-
-# Import texture, AWS, and SOC symbology as group layer
-mapx.createGroupLayer('soil_symbology')
-SYM_LYR = arcpy.mp.LayerFile(r'C:/ArcGIS/WaSHI_Roadmap/Texture_SOC_AWS.lyrx')
-mapx.addLayerToGroup(
-    mapx.listLayers('soil_symbology')[0],
-    SYM_LYR)
-
-# Apply texture symbology
-for lyr in mapx.listLayers('*_Texture'):
-    if lyr.isFeatureLayer:
-        print(lyr)
-        arcpy.management.ApplySymbologyFromLayer(
-            lyr,
-            SYM_LYR.listLayers('Texture')[0]
-            )
-
-# Apply AWS symbology
-for lyr in mapx.listLayers('*_AWS*'):
-    if lyr.isFeatureLayer:
-        print(lyr)
-        arcpy.management.ApplySymbologyFromLayer(
-            lyr,
-            SYM_LYR.listLayers('AWS')[0]
-            )
-
-# Apply SOC symbology
-for lyr in mapx.listLayers('*_SOC*'):
-    if lyr.isFeatureLayer:
-        print(lyr)
-        arcpy.management.ApplySymbologyFromLayer(
-            lyr,
-            SYM_LYR.listLayers('SOC')[0]
-            )
-
-# Remove symbology lyrs
-for lyr in mapx.listLayers('soil_symbology'):
-    mapx.removeLayer(lyr)
-
-# End time
-T1 = time.perf_counter()
-print('Applied symbology to soils layers.')
-print(f'in {round((T1-T0)/60, 2)} minutes.')
-
-# Save project
+# Save
 aprx.save()
-
-# Remove lock file
 del aprx
 
 # Script end time
 T1_SCRIPT = time.perf_counter()
 print(f'Script finished in {round((T1_SCRIPT-T0_SCRIPT)/60, 2)} minutes.')
+
+print('Now run create_soils_subsets.py.')

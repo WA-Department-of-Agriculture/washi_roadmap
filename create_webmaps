@@ -86,26 +86,19 @@ LTARE_URL = NRAS_URL + 'WaSHI_LTAREs/MapServer/0'
 # Create dictionary of SQL definition queries
 ltare_dict = {
     'Western_Diversified': 
-        '''Site_Name in ('WSU Puyallup', 'WSU Mount Vernon NWREC')''',
+        '''Site_Name in ('WSU Puyallup')''',
     'Tree_Fruit': 
-        '''Site_Name in ('WSU Wenatchee Sunrise Orchard', 'WSU Othello', 
-        'WSU Prosser')''',
+        '''Site_Name in ('WSU Wenatchee')''',
     'Northwest_Annual':
-        '''Site_Name in ('WSU Mount Vernon NWREC')''',
+        '''Site_Name in ('WSU Mount Vernon')''',
     'Grape':
-        '''Site_Name in ('WSU Wenatchee Sunrise Orchard', 'WSU Othello', 
-        'WSU Prosser')''',
+        '''Site_Name in ('WSU Prosser')''',
     'Dryland':
-        '''Site_Name in ('WSU Wenatchee Sunrise Orchard', 'WSU Othello', 
-        'WSU Prosser', 'WSU Wilke')''',
+        '''Site_Name in ('WSU Wilke')''',
     'CBIP':
-        '''Site_Name in ('WSU Wenatchee Sunrise Orchard', 'WSU Othello', 
-        'WSU Prosser')''',
+        '''Site_Name in ('WSU Othello')''',
     'CBI':
-        '''Site_Name in ('WSU Wenatchee Sunrise Orchard', 'WSU Othello', 
-        'WSU Prosser')''',
-    'Caneberry':
-        '''Site_Name in ('WSU Mount Vernon NWREC')''',
+        '''Site_Name in ('WSU Wenatchee, 'WSU Othello', 'WSU Prosser')'''
 }
 
 # Add LTAREs to each map with definition queries
